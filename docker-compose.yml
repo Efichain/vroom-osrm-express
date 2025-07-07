@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  osrm:
+    build:
+      context: .
+      dockerfile: osrm.Dockerfile
+    container_name: osrm
+    ports:
+      - "5000:5000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+
+  vroom:
+    build: .
+    container_name: vroom
+    ports:
+      - "4000:3000"
+    depends_on:
+      - osrm
